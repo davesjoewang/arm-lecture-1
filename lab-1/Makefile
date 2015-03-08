@@ -23,20 +23,11 @@ fibseq.o: fibseq.c
 clean:
 	rm -f $(objects) fibseq
 
-QEMU_CMD = qemu-arm -L /usr/arm-linux-gnueabihf ./fibseq &
-CMD = yes 9 | $(call QEMU_CMD) && sleep 1
+QEMU_CMD = qemu-arm -L /usr/arm-linux-gnueabihf ./fibseq --silent | ./test-lab1.py & 
+
 qemu: fibseq
-	@yes 1 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 2 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 3 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 4 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 5 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 6 | $(call QEMU_CMD)
-	@sleep 1
-	@yes 7 | $(call QEMU_CMD)
-	@sleep 1
+	test=1 ; while [ $$test -le 46 ] ; do \
+		yes $$test | $(call QEMU_CMD)  \
+                sleep 1; \
+		test=`expr $$test + 1`; \
+	done
